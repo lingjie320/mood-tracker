@@ -82,6 +82,9 @@
   endDateInput.value = fmtDate(today);
 
   // ── Mood labels ──────────────────────────────────────────────────────
+  const CN_MONTHS = ['一月', '二月', '三月', '四月', '五月', '六月',
+                     '七月', '八月', '九月', '十月', '十一月', '十二月'];
+
   const moodInfo = {
     happy:  { label: '开心', emoji: '😊', placeholder: '今天是什么让你开心？' },
     normal: { label: '平常', emoji: '😐', placeholder: '今天有什么想记录的吗？（可留空）' },
@@ -97,12 +100,7 @@
       btn.classList.toggle('selected', btn.dataset.mood === currentMood);
     });
 
-    // Show note field only when a mood is selected
-    if (currentMood) {
-      showNoteField(currentMood, rec ? rec.note : '');
-    } else {
-      hideNoteField();
-    }
+
   }
 
   function showNoteField(mood, noteText) {
@@ -124,6 +122,7 @@
 
   recordDateInput.addEventListener('change', () => {
     selectedMood = null;
+    hideNoteField();
     updateSelectedBtn();
     clearFeedback();
   });
@@ -166,6 +165,11 @@
     saveRecords(records);
     showFeedback(`${dateStr} 已保存：${moodInfo[selectedMood].emoji} ${moodInfo[selectedMood].label}`);
     selectedMood = null;
+    // Clear the input + reset UI to "no mood staged" state
+    noteInput.value = '';
+    noteCount.textContent = '0';
+    hideNoteField();
+    updateSelectedBtn();
     renderCalendar();
     renderStats();
   });
@@ -186,7 +190,7 @@
 
   // ── Calendar ─────────────────────────────────────────────────────────
   function renderCalendar() {
-    calendarTitle.textContent = `${viewYear}年${viewMonth + 1}月`;
+    calendarTitle.textContent = `${viewYear}年${CN_MONTHS[viewMonth]}`;
     calendarDays.innerHTML = '';
 
     const firstDay = new Date(viewYear, viewMonth, 1);

@@ -2,7 +2,7 @@
 // Strategy: cache-first for the app shell (HTML/CSS/JS/icons), network-first otherwise.
 // On install, pre-cache the shell so the app loads offline.
 
-const CACHE_NAME = 'mood-tracker-v1';
+const CACHE_NAME = 'mood-tracker-v2';
 const APP_SHELL = [
   './',
   './index.html',

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#667eea" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="心情" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="description" content="记录每天的心情，开心、伤心、平常。数据保存在你的设备上。" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <title>心情记录</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🌈 心情记录</h1>
+      <p class="subtitle">记录每一天的心情</p>
+    </header>
+
+    <!-- 记录区 -->
+    <section class="card record-section">
+      <h2>记录心情</h2>
+      <div class="date-picker-row">
+        <label for="record-date">选择日期：</label>
+        <input type="date" id="record-date" />
+      </div>
+      <div class="mood-buttons">
+        <button class="mood-btn happy" data-mood="happy" title="开心">
+          <span class="mood-emoji">😊</span>
+          <span class="mood-label">开心</span>
+        </button>
+        <button class="mood-btn normal" data-mood="normal" title="平常">
+          <span class="mood-emoji">😐</span>
+          <span class="mood-label">平常</span>
+        </button>
+        <button class="mood-btn sad" data-mood="sad" title="伤心">
+          <span class="mood-emoji">😢</span>
+          <span class="mood-label">伤心</span>
+        </button>
+      </div>
+
+      <div id="note-field" class="note-field" hidden>
+        <label for="record-note" id="note-label">写一句话：</label>
+        <textarea id="record-note" rows="2" maxlength="200" placeholder="为什么今天开心/伤心？"></textarea>
+        <div class="note-meta">
+          <span class="char-count"><span id="note-count">0</span>/200</span>
+        </div>
+      </div>
+
+      <div class="record-actions">
+        <button id="save-btn" class="save-btn" disabled>保存记录</button>
+      </div>
+      <div id="record-feedback" class="feedback" aria-live="polite"></div>
+    </section>
+
+    <!-- 日历区 -->
+    <section class="card calendar-section">
+      <div class="calendar-header">
+        <button id="prev-month" class="nav-btn" aria-label="上个月">◀</button>
+        <h2 id="calendar-title">2026年6月</h2>
+        <button id="next-month" class="nav-btn" aria-label="下个月">▶</button>
+      </div>
+      <div class="calendar-grid">
+        <div class="calendar-weekday">日</div>
+        <div class="calendar-weekday">一</div>
+        <div class="calendar-weekday">二</div>
+        <div class="calendar-weekday">三</div>
+        <div class="calendar-weekday">四</div>
+        <div class="calendar-weekday">五</div>
+        <div class="calendar-weekday">六</div>
+      </div>
+      <div id="calendar-days" class="calendar-grid"></div>
+      <div class="calendar-legend">
+        <span class="legend-item"><span class="legend-dot happy"></span>开心</span>
+        <span class="legend-item"><span class="legend-dot normal"></span>平常</span>
+        <span class="legend-item"><span class="legend-dot sad"></span>伤心</span>
+        <span class="legend-item">📝 有备注</span>
+      </div>
+    </section>
+
+    <!-- 统计区 -->
+    <section class="card stats-section">
+      <h2>查询统计</h2>
+      <div class="date-range-row">
+        <div class="date-field">
+          <label for="start-date">开始日期：</label>
+          <input type="date" id="start-date" />
+        </div>
+        <div class="date-field">
+          <label for="end-date">结束日期：</label>
+          <input type="date" id="end-date" />
+        </div>
+        <button id="query-btn" class="query-btn">查询</button>
+      </div>
+      <div id="stats-result" class="stats-result" aria-live="polite"></div>
+    </section>
+
+    <!-- 历史记录入口 -->
+    <section class="card history-section">
+      <div class="history-header">
+        <h2>历史记录</h2>
+        <button id="show-history-btn" class="secondary-btn">查看全部</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- 详情弹窗：单天 -->
+  <div id="day-modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-content" role="dialog" aria-modal="true">
+      <button class="modal-close" data-close aria-label="关闭">×</button>
+      <h3 id="day-modal-title">2026-06-14</h3>
+      <div id="day-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- 历史记录弹窗：列表 -->
+  <div id="history-modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-content modal-wide" role="dialog" aria-modal="true">
+      <button class="modal-close" data-close aria-label="关闭">×</button>
+      <h3>历史记录</h3>
+      <div class="history-filters">
+        <button class="filter-btn active" data-filter="all">全部</button>
+        <button class="filter-btn" data-filter="happy">开心</button>
+        <button class="filter-btn" data-filter="normal">平常</button>
+        <button class="filter-btn" data-filter="sad">伤心</button>
+        <button class="filter-btn" data-filter="noted">有备注</button>
+      </div>
+      <div id="history-list" class="history-list"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Register the service worker (only on https or localhost; GitHub Pages qualifies).
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch((err) => {
+          console.warn('SW registration failed:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

@@ -47,6 +47,8 @@ body {
   padding: 24px;
   margin-bottom: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  min-width: 0;
 }
 
 .card h2 {
@@ -777,7 +779,7 @@ body {
 /* Responsive */
 @media (max-width: 480px) {
   body { padding: 10px; padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); padding-bottom: max(10px, env(safe-area-inset-bottom)); }
-  .card { padding: 16px; border-radius: 14px; }
+  .card { padding: 16px; border-radius: 14px; overflow: hidden; min-width: 0; }
   .card h2 { font-size: 1.05rem; }
   .mood-btn { padding: 14px 8px; min-height: 88px; }
   .mood-emoji { font-size: 2rem; }
@@ -790,8 +792,11 @@ body {
   .calendar-legend { gap: 10px; font-size: 0.8rem; }
   .header h1 { font-size: 1.6rem; }
   .subtitle { font-size: 0.9rem; }
-  .date-range-row { flex-direction: column; align-items: stretch; }
-  .date-field { min-width: 0; }
+  .date-range-row { flex-direction: column; align-items: stretch; overflow: hidden; }
+  .date-field { flex: 1 1 auto; width: 100%; min-width: 0; overflow: hidden; }
+  .date-field input[type="date"] { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+  .date-picker-row { flex-wrap: wrap; overflow: hidden; }
+  .date-picker-row input[type="date"] { min-width: 0; max-width: 100%; box-sizing: border-box; }
   .query-btn { width: 100%; }
   .save-btn { width: 100%; }
 }
